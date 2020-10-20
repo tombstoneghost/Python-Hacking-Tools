@@ -13,7 +13,7 @@ def get_arguments():
 
     (options, arguments) = parser.parse_args()
     if not options.target:
-        parser.error("[-] Please specify an interface, use --help for more info.")
+        parser.error("[-] Please specify the target, use --help for more info.")
 
     return options
 
