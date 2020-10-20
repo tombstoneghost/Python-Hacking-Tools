@@ -1,6 +1,19 @@
 # Imports
+import optparse
 import scapy.all as scapy
 from scapy.layers import http
+
+
+# Getting Arguments from CLi
+def get_args():
+    parser = optparse.OptionParser()
+    parser.add_option("-i", "--interface", dest="interface", help="Specify interface to use")
+
+    (options, arguments) = parser.parse_args()
+    if not options.interface:
+        parser.error("[-] Please specify an interface, use --help for more info.")
+
+    return options
 
 
 # Sniffing Data
@@ -34,4 +47,6 @@ def process_sniffed_packet(packet):
             print("\n\n[+] Possible username/password > " + str(login_info) + "\n")
 
 
-sniff("wlan0")
+args = get_args()
+
+sniff(args.interface)
